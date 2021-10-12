@@ -19,6 +19,17 @@ class IMDBPage:
     def __init__(self, browser=browser):
         self.browser = browser
 
+    def get_details(self, movie_url):
+        """
+        TODO:
+        - get video url
+        - get age rating
+        - get director & casts
+        - get movie rating & num of reviews
+        - get movie length
+        """
+        pass
+
     def get_description(self, movie_url):
         description_url = movie_url.replace('?ref_=', 'plotsummary?ref_=')
         self.browser.get(description_url)
