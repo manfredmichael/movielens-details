@@ -22,7 +22,7 @@ class IMDBPage:
     def get_details(self, movie_url):
         self.load_page(movie_url)
         age_rating, year, movie_length = self.get_info()
-        director, writer = self.get_cast()
+        director, writer, cast = self.get_cast()
         rating, num_review = self.get_rating()
         description = self.get_description(movie_url)
 
@@ -31,6 +31,7 @@ class IMDBPage:
                 'num_review': num_review,
                 'director': director,
                 'writer': writer,
+                'cast': cast,
                 'age_rating': age_rating,
                 'year': year,
                 'movie_length': movie_length}
@@ -43,6 +44,7 @@ class IMDBPage:
         age_rating= info[0].text
         year = info[1].text
         movie_length = info[2].text
+
         return age_rating, year, movie_length
 
     def get_cast(self):
@@ -50,9 +52,9 @@ class IMDBPage:
             cast_box = self.browser.find_element_by_xpath("//section[@data-testid='title-cast']")
         except NoSuchElementException:
             cast_box = None
-        
+
         director_box, writer_box = tuple(cast_box.find_element_by_xpath("//ul[@class='ipc-metadata-list ipc-metadata-list--dividers-all StyledComponents__CastMetaDataList-y9ygcu-10 cbPPkN ipc-metadata-list--base']") \
-                                                 .find_elements_by_xpath("//li[@class='ipc-metadata-list__item']")[:2])
+                                                 .find_elements_by_xpath("//div[@class='ipc-metadata-list-item__content-container']")[:2])
 
         directors = director_box.find_elements_by_tag_name('li')
         directors = [director.find_element_by_tag_name('a').text for director in directors] 
@@ -60,7 +62,19 @@ class IMDBPage:
         writers = writer_box.find_elements_by_tag_name('li')
         writers = [writer.find_element_by_tag_name('a').text for writer in writers] 
 
-        return directors, writers
+        casts = cast_box.find_elements_by_xpath("//span[@class='StyledComponents__CharacterNameWithoutAs-y9ygcu-5 iaZZDn']")
+        casts = [cast.text for cast in casts] 
+        
+        print('=')
+        print(director_box.text)
+        print(writer_box.text)
+
+        print('-')
+        print(directors)
+        print(writers)
+        print(casts)
+
+        return directors, writers, casts
 
     def get_rating(self):
         rating_box = self.browser.find_element_by_xpath("//div[@class='AggregateRatingButton__ContentWrap-sc-1ll29m0-0 hmJkIS']").text
