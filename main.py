@@ -10,9 +10,12 @@ def main():
 
     movielens = movielens_df.to_dict('records')
     for i, row in tqdm(enumerate(movielens)):
-        result = page.get_details(row['movie_url'])
-        row['description'] = result['description']
-        movielens[i] = row
+        try:
+            result = page.get_details(row['movie_url'])
+            row['description'] = result['description']
+            movielens[i] = row
+        except Exception as e:
+            print(e)
 
     movielens_df = pd.DataFrame(movielens)
     movielens_df.to_csv('movielens100k_details.csv', index=False)

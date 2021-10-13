@@ -42,13 +42,9 @@ class IMDBPage:
         infos = info_box.find_elements_by_tag_name("li")
         if len(infos) == 3:
             year, age_rating, movie_length = tuple([info.text for info in infos])
-            print(year)
-            print(age_rating)
-            print(movie_length)
         else:
             year, movie_length = tuple([info.text for info in infos])
-            print(year)
-            print(movie_length)
+            age_rating = None
 
         return year, age_rating, movie_length
 
@@ -83,7 +79,7 @@ class IMDBPage:
         description_url = movie_url.replace('?ref_=', 'plotsummary?ref_=')
         self.browser.get(description_url)
 
-        description_box = WebDriverWait(self.browser, 20).until(
+        description_box = WebDriverWait(self.browser, 10).until(
             EC.presence_of_element_located((By.XPATH, "//li[@class='ipl-zebra-list__item']"))
         )
         description = description_box.find_element_by_tag_name('p')
