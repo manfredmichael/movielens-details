@@ -21,7 +21,7 @@ class IMDBPage:
 
     def get_details(self, movie_url):
         self.load_page(movie_url)
-        age_rating, year, movie_length = self.get_info()
+        year, age_rating, movie_length = self.get_info()
         director, writer, cast = self.get_cast()
         rating, num_review = self.get_rating()
         description = self.get_description(movie_url)
@@ -37,15 +37,20 @@ class IMDBPage:
                 'movie_length': movie_length}
 
     def get_info(self):
-        info = WebDriverWait(self.browser, 10).until(
-            EC.presence_of_element_located((By.XPATH, "//div[@class='TitleBlock__TitleMetaDataContainer-sc-1nlhx7j-2 hWHMKr']"))
-        ).find_elements_by_tag_name('li')
+        info_box = self.browser.find_element_by_xpath("//div[@class='TitleBlock__TitleMetaDataContainer-sc-1nlhx7j-2 hWHMKr']")
+        
+        infos = info_box.find_elements_by_tag_name("li")
+        if len(infos) == 3:
+            year, age_rating, movie_length = tuple([info.text for info in infos])
+            print(year)
+            print(age_rating)
+            print(movie_length)
+        else:
+            year, movie_length = tuple([info.text for info in infos])
+            print(year)
+            print(movie_length)
 
-        age_rating= info[0].text
-        year = info[1].text
-        movie_length = info[2].text
-
-        return age_rating, year, movie_length
+        return year, age_rating, movie_length
 
     def get_cast(self):
         try:

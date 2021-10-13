@@ -14,8 +14,9 @@ def main():
         row['description'] = result['description']
         movielens[i] = row
 
-    movielens.to_csv('movielens100k_details.csv', index=False)
-    movielens.to_json('movielens100k_details.json', index=False)
+    movielens_df = pd.DataFrame(movielens)
+    movielens_df.to_csv('movielens100k_details.csv', index=False)
+    movielens_df.to_json('movielens100k_details.json', index=False)
         
 
 if __name__=='__main__':
