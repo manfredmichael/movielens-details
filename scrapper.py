@@ -62,18 +62,9 @@ class IMDBPage:
         writers = writer_box.find_elements_by_tag_name('li')
         writers = [writer.find_element_by_tag_name('a').text for writer in writers] 
 
-        casts = cast_box.find_elements_by_xpath("//span[@class='StyledComponents__CharacterNameWithoutAs-y9ygcu-5 iaZZDn']")
+        casts = cast_box.find_elements_by_xpath("//a[@data-testid='title-cast-item__actor']")
         casts = [cast.text for cast in casts] 
         
-        print('=')
-        print(director_box.text)
-        print(writer_box.text)
-
-        print('-')
-        print(directors)
-        print(writers)
-        print(casts)
-
         return directors, writers, casts
 
     def get_rating(self):
