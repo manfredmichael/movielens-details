@@ -92,7 +92,7 @@ class IMDBPage:
             rating = rating_box.split('\n')[0].strip() 
             num_review= rating_box.split('\n')[-1].strip() 
             return rating, num_review
-        try NoSuchElementException:
+        except NoSuchElementException:
             return None, None
 
     @debug
