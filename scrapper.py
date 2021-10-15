@@ -16,8 +16,8 @@ CHROMEDRIVER_PATH = '../chromedriver'
 WINDOW_SIZE = "1920,1080"
 
 chrome_options = Options()
-chrome_options.add_argument("--headless")
-chrome_options.add_argument("--window-size=%s" % WINDOW_SIZE)
+# chrome_options.add_argument("--headless")
+# chrome_options.add_argument("--window-size=%s" % WINDOW_SIZE)
 
 browser = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH,
                           chrome_options=chrome_options
@@ -86,11 +86,14 @@ class IMDBPage:
 
     @debug
     def get_rating(self):
-        rating_box = self.browser.find_element_by_xpath("//div[@class='AggregateRatingButton__ContentWrap-sc-1ll29m0-0 hmJkIS']").text
-        
-        rating = rating_box.split('\n')[0].strip() 
-        num_review= rating_box.split('\n')[-1].strip() 
-        return rating, num_review 
+        try:
+            rating_box = self.browser.find_element_by_xpath("//div[@class='AggregateRatingButton__ContentWrap-sc-1ll29m0-0 hmJkIS']").text
+            
+            rating = rating_box.split('\n')[0].strip() 
+            num_review= rating_box.split('\n')[-1].strip() 
+            return rating, num_review
+        try NoSuchElementException:
+            return None, None
 
     @debug
     def get_description(self, movie_url):

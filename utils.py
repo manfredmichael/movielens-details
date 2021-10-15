@@ -9,7 +9,7 @@ def debug(func):
         signature = ", ".join(args_repr + kwargs_repr)           # 3
         try:
             value = func(*args, **kwargs)
+            return value
         except Exception as e:
             print(f"Error caught on {func.__name__!r}: {e!r}")           # 4
-        return value
     return wrapper_debug
