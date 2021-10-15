@@ -16,8 +16,8 @@ CHROMEDRIVER_PATH = '../chromedriver'
 WINDOW_SIZE = "1920,1080"
 
 chrome_options = Options()
-# chrome_options.add_argument("--headless")
-# chrome_options.add_argument("--window-size=%s" % WINDOW_SIZE)
+chrome_options.add_argument("--headless")
+chrome_options.add_argument("--window-size=%s" % WINDOW_SIZE)
 
 browser = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH,
                           chrome_options=chrome_options
@@ -68,7 +68,7 @@ class IMDBPage:
         try:
             cast_box = self.browser.find_element_by_xpath("//section[@data-testid='title-cast']")
         except NoSuchElementException:
-            cast_box = None
+            return None, None, None
 
         director_box, writer_box = tuple(cast_box.find_element_by_xpath("//ul[@class='ipc-metadata-list ipc-metadata-list--dividers-all StyledComponents__CastMetaDataList-y9ygcu-10 cbPPkN ipc-metadata-list--base']") \
                                                  .find_elements_by_xpath("//div[@class='ipc-metadata-list-item__content-container']")[:2])
