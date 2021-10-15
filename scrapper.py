@@ -1,6 +1,7 @@
 import os
 import pickle
 import random
+from utils import debug
 from time import sleep
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -9,9 +10,19 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.chrome.options import Options
 
+CHROMEDRIVER_PATH = '../chromedriver'
+WINDOW_SIZE = "1920,1080"
 
-browser = webdriver.Chrome('../chromedriver')
+chrome_options = Options()
+chrome_options.add_argument("--headless")
+chrome_options.add_argument("--window-size=%s" % WINDOW_SIZE)
+
+browser = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH,
+                          chrome_options=chrome_options
+                         )
+
 browser.implicitly_wait(5)
 
 
@@ -35,19 +46,24 @@ class IMDBPage:
                 'age_rating': age_rating,
                 'year': year,
                 'movie_length': movie_length}
-
+    @debug
     def get_info(self):
+
         info_box = self.browser.find_element_by_xpath("//div[@class='TitleBlock__TitleMetaDataContainer-sc-1nlhx7j-2 hWHMKr']")
         
-        infos = info_box.find_elements_by_tag_name("li")
-        if len(infos) == 3:
-            year, age_rating, movie_length = tuple([info.text for info in infos])
-        else:
-            year, movie_length = tuple([info.text for info in infos])
-            age_rating = None
+        try:
+            infos = info_box.find_elements_by_tag_name("li")
+            if len(infos) == 3:
+                year, age_rating, movie_length = tuple([info.text for info in infos])
+            else:
+                year, movie_length = tuple([info.text for info in infos])
+                age_rating = None
+        except: # Some movies dont show these info
+            return None, None, None
 
         return year, age_rating, movie_length
 
+    @debug
     def get_cast(self):
         try:
             cast_box = self.browser.find_element_by_xpath("//section[@data-testid='title-cast']")
@@ -68,6 +84,7 @@ class IMDBPage:
         
         return directors, writers, casts
 
+    @debug
     def get_rating(self):
         rating_box = self.browser.find_element_by_xpath("//div[@class='AggregateRatingButton__ContentWrap-sc-1ll29m0-0 hmJkIS']").text
         
@@ -75,6 +92,7 @@ class IMDBPage:
         num_review= rating_box.split('\n')[-1].strip() 
         return rating, num_review 
 
+    @debug
     def get_description(self, movie_url):
         description_url = movie_url.replace('?ref_=', 'plotsummary?ref_=')
         self.browser.get(description_url)
@@ -84,7 +102,8 @@ class IMDBPage:
         )
         description = description_box.find_element_by_tag_name('p')
         return description.text.strip()
-
+    
+    @debug
     def load_page(self, movie_url):
         self.browser.get(movie_url)
         WebDriverWait(self.browser, 20).until(
