@@ -1,9 +1,9 @@
+import os
+import json
 import scrapper
 from scrapper import IMDBPage
 import pandas as pd
-import json
 from tqdm import tqdm
-import json
 
 
 def main():
@@ -17,6 +17,10 @@ def main():
 
     for batch in tqdm(range(n_batch), position=0):
         movielens_batch = []
+
+        # skip to continue scrapping last batch
+        if os.path.isfile('json/movielens100k_details_batch_{}.json'.format(batch)):
+            continue
 
         for i, row in enumerate(tqdm(movielens[batch * batch_size: (batch + 1) * batch_size], position=1, leave=False)):
             try:

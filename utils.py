@@ -11,5 +11,5 @@ def debug(func):
             value = func(*args, **kwargs)
             return value
         except Exception as e:
-            print(f"Error caught on {func.__name__!r}: {e!r}")           # 4
+            print(f"Error caught on {func.__name__}: {e}")           # 4
     return wrapper_debug
