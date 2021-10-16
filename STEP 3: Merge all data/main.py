@@ -21,7 +21,7 @@ full_csv['movie_genres'] = full_csv['movie_genres'].apply(
     lambda genres: [int(i) for i in genres.replace('[','').replace(']','').split()]
 )
 full_csv['genre'] = full_csv['movie_genres'].apply(
-    lambda genres: [genre_to_str[str(genre)] for genre in genres if genre in genre_to_str]
+    lambda genres: [genre_to_str[str(genre)] for genre in genres if genre in genre_to_str.keys()]
 )
 
 full_csv.to_csv('../movielens100k_details.csv', index=False)
@@ -41,7 +41,7 @@ full_csv['movie_genres'] = full_csv['movie_genres'].apply(
     lambda genres: [int(i) for i in genres.replace('[','').replace(']','').split()]
 )
 full_csv['genre'] = full_csv['movie_genres'].apply(
-    lambda genres: [genre_to_str[str(genre)] for genre in genres if genre in genre_to_str]
+    lambda genres: [genre_to_str[str(genre)] for genre in genres if str(genre) in genre_to_str.keys()]
 )
 
 # save as csv
