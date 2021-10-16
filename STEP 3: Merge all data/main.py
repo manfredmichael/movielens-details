@@ -32,7 +32,7 @@ full_csv['cast'] = full_csv['cast'].apply(
 
 # add genre in string format
 full_csv['genre'] = full_csv['movie_genres'].apply(
-    lambda genres: [genre_to_str[str(genre)] for genre in genres if genre in genre_to_str.keys()]
+    lambda genres: [genre_to_str[str(genre)] for genre in genres if str(genre) in genre_to_str.keys()]
 )
 
 # save as csv
