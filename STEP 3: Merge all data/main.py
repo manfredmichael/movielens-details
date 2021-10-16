@@ -39,6 +39,7 @@ full_csv['genre'] = full_csv['movie_genres'].apply(
 full_csv.to_csv('../movielens100k_details.csv', index=False)
 
 # save as json
-full_csv = full_csv.where(pd.notnull(full_csv), None)
+full_csv = full_csv.astype(object).where(pd.notna(full_csv), None)
+# full_csv['rating'] = full_csv['rating'].apply(lambda x: x if )
 with open('../movielens100k_details.json', 'w') as f:
     json.dump(full_csv.to_dict('records'), f)
