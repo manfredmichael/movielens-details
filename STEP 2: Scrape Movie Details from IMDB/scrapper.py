@@ -12,7 +12,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.chrome.options import Options
 
-CHROMEDRIVER_PATH = '../chromedriver'
+CHROMEDRIVER_PATH = '../../chromedriver'
 WINDOW_SIZE = "1920,1080"
 
 chrome_options = Options()
@@ -35,6 +35,7 @@ class IMDBPage:
         year, age_rating, movie_length = self.get_info()
         director, writer, cast = self.get_cast()
         rating, num_review = self.get_rating()
+        poster_url = self.get_poster_url()
         description = self.get_description(movie_url)
 
         return {'description': description,
@@ -42,6 +43,7 @@ class IMDBPage:
                 'num_review': num_review,
                 'director': director,
                 'writer': writer,
+                'poster_url': poster_url,
                 'cast': cast,
                 'age_rating': age_rating,
                 'year': year,
@@ -96,6 +98,15 @@ class IMDBPage:
             return None, None
 
     @debug
+    def get_poster_url(self):
+        try:
+            poster_box = self.browser.find_element_by_xpath("//div[@class='Media__MediaParent-sc-1x98dcb-0 evAOsN']")
+            poster_url = poster_box.find_element_by_tag_name('img').get_attribute('srcset')
+            return poster_url
+        except NoSuchElementException:
+            return None
+
+    @debug
     def get_description(self, movie_url):
         description_url = movie_url.replace('?ref_=', 'plotsummary?ref_=')
         self.browser.get(description_url)
@@ -105,7 +116,7 @@ class IMDBPage:
         )
         description = description_box.find_element_by_tag_name('p')
         return description.text.strip()
-    
+
     @debug
     def load_page(self, movie_url):
         self.browser.get(movie_url)
