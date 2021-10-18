@@ -20,6 +20,9 @@ for filename in os.listdir('csv'):
 full_csv['movie_genres'] = full_csv['movie_genres'].apply(
     lambda x: [int(i) for i in x.replace('[','').replace(']','').split()]
 )
+full_csv['poster_url'] = full_csv['poster_url'].apply(
+    lambda x: [str(i).strip() for i in str(x).split(' ') if str(i[-4:]) == '.jpg']
+)
 full_csv['director'] = full_csv['director'].apply(
     lambda x: [str(i).replace('\'','').replace('\"','').strip() for i in str(x).replace('[','').replace(']','').split(',')]
 )
