@@ -100,8 +100,10 @@ class IMDBPage:
     @debug
     def get_poster_url(self):
         try:
-            poster_box = self.browser.find_element_by_xpath("//div[@class='ipc-poster ipc-poster--baseAlt ipc-poster--dynamic-width Poster__CelPoster-sc-6zpm25-0 kPdBKI celwidget ipc-sub-grid-item ipc-sub-grid-item--span-2']")
-            poster_url = poster_box.find_element_by_tag_name('img').get_attribute('srcset')
+            poster_box = WebDriverWait(self.browser, 10).until(
+                EC.presence_of_element_located((By.XPATH, "//img[@class='ipc-image']"))
+            )
+            poster_url = poster_box.get_attribute('srcset')
             return poster_url
         except NoSuchElementException as e:
             print(f'Can\'t get poster url: {e}')
